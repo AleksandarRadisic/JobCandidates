@@ -1,14 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Persistence.EfStructures;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Persistence.Repositories.Base.Interface;
+﻿using JobCandidates.Domain.PersistenceInterfaces.Base;
+using JobCandidates.Persistence.EfStructures;
+using Microsoft.EntityFrameworkCore;
 
-namespace Persistence.Repositories.Base.Implementation
+namespace JobCandidates.Persistence.Repositories.Base.Implementation
 {
     public class BaseReadRepository<TKey, TEntity> : IBaseReadRepository<TKey, TEntity> where TEntity : class, new()
     {

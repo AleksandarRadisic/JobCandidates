@@ -1,6 +1,6 @@
-﻿using Domain.Model;
-using JobCandidates.API.Dto;
-using JobCandidates.Persistence.Repositories.Interface;
+﻿using JobCandidates.API.Dto;
+using JobCandidates.Domain.Model;
+using JobCandidates.Domain.PersistenceInterfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

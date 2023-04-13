@@ -1,12 +1,8 @@
-﻿using Persistence.EfStructures;
-using Persistence.Repositories.Base.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using JobCandidates.Domain.PersistenceInterfaces.Base;
+using JobCandidates.Persistence.EfStructures;
 
-namespace Persistence.Repositories.Base.Implementation
+namespace JobCandidates.Persistence.Repositories.Base.Implementation
 {
     public class BaseWriteRepository<TEntity> : IBaseWriteRepository<TEntity> where TEntity : class, new()
     {

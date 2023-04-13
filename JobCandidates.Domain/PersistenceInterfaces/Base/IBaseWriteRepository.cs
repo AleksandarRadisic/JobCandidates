@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Persistence.Repositories.Base.Interface
+namespace JobCandidates.Domain.PersistenceInterfaces.Base
 {
     public interface IBaseWriteRepository<TEntity> where TEntity : class
     {

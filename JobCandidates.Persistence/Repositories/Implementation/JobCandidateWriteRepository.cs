@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Model;
-using JobCandidates.Persistence.Repositories.Interface;
-using Persistence.EfStructures;
-using Persistence.Repositories.Base.Implementation;
+using JobCandidates.Domain.Model;
+using JobCandidates.Domain.PersistenceInterfaces;
+using JobCandidates.Persistence.EfStructures;
+using JobCandidates.Persistence.Repositories.Base.Implementation;
 
 namespace JobCandidates.Persistence.Repositories.Implementation
 {
