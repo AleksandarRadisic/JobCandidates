@@ -1,6 +1,10 @@
-﻿using JobCandidates.API.Dto;
+﻿using System;
+using AutoMapper;
+using JobCandidates.API.Dto;
+using JobCandidates.Domain.Exceptions;
 using JobCandidates.Domain.Model;
 using JobCandidates.Domain.PersistenceInterfaces;
+using JobCandidates.Domain.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,22 +14,49 @@ namespace JobCandidates.API.Controllers
     [ApiController]
     public class SkillsController : ControllerBase
     {
-        private readonly ISkillWriteRepository _skillWriteRepository;
+        private readonly ISkillService _skillService;
+        private readonly IMapper _mapper;
 
-        public SkillsController(ISkillWriteRepository skillWriteRepository)
+        public SkillsController(ISkillService skillService, IMapper mapper)
         {
-            _skillWriteRepository = skillWriteRepository;
+            _skillService = skillService;
+            _mapper = mapper;
         }
 
         [HttpPut]
         public IActionResult AddSkill(SkillDto dto)
         {
-            Skill skill = new Skill
+            try
             {
-                Name = dto.Name
-            };
-            _skillWriteRepository.Add(skill);
+                _skillService.AddSkill(_mapper.Map<Skill>(dto));
+            }
+            catch (Exception ex)
+            {
+                switch (ex)
+                {
+                    case AlreadyExistsException: return BadRequest(ex.Message);
+                    default: return Problem(ex.Message);
+                }
+            }
             return Ok("Skill added");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteSkill(DeleteEntityIdDto dto)
+        {
+            try
+            {
+                _skillService.DeleteSkill(dto.Id.Value);
+            }
+            catch (Exception ex)
+            {
+                switch (ex)
+                {
+                    case NotFoundException: return NotFound(ex.Message);
+                    default: return Problem(ex.Message);
+                }
+            }
+            return Ok("Skill deleted");
         }
     }
 }

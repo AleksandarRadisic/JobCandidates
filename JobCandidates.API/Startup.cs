@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JobCandidates.Domain.PersistenceInterfaces;
+using JobCandidates.Domain.Services.Implementation;
+using JobCandidates.Domain.Services.Interface;
 using JobCandidates.Persistence.EfStructures;
 using JobCandidates.Persistence.Migrations;
 using JobCandidates.Persistence.Repositories.Implementation;
@@ -44,10 +46,15 @@ namespace JobCandidates.API
                 options.UseNpgsql(Configuration.GetConnectionString("connectionString"));
             });
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<IJobCandidateReadRepository, JobCandidateReadRepository>();
             services.AddScoped<IJobCandidateWriteRepository, JobCandidateWriteRepository>();
             services.AddScoped<ISkillReadRepository, SkillReadRepository>();
             services.AddScoped<ISkillWriteRepository, SkillWriteRepository>();
+
+            services.AddScoped<IJobCandidateService, JobCandidateService>();
+            services.AddScoped<ISkillService, SkillService>();
 
             using (var context = new AppDbContextFactory().CreateDbContext(
                        new[] { Configuration.GetConnectionString("connectionString") }))

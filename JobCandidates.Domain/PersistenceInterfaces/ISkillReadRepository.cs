@@ -6,5 +6,6 @@ namespace JobCandidates.Domain.PersistenceInterfaces
 {
     public interface ISkillReadRepository : IBaseReadRepository<Guid, Skill>
     {
+        public Skill FindByName(string name);
     }
 }

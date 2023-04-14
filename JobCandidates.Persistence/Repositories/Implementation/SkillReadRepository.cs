@@ -15,5 +15,10 @@ namespace JobCandidates.Persistence.Repositories.Implementation
         public SkillReadRepository(AppDbContext context) : base(context)
         {
         }
+
+        public Skill FindByName(string name)
+        {
+            return GetSet().FirstOrDefault(x => x.Name == name);
+        }
     }
 }
