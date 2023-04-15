@@ -33,5 +33,10 @@ namespace JobCandidates.Domain.Services.Implementation
             if (skill == null) throw new NotFoundException("Skill not found");
             _skillWriteRepository.Delete(skill);
         }
+
+        public IEnumerable<Skill> GetAll()
+        {
+            return _skillReadRepository.GetAll();
+        }
     }
 }

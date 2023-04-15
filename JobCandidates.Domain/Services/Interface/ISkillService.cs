@@ -11,5 +11,6 @@ namespace JobCandidates.Domain.Services.Interface
     {
         public Skill AddSkill(Skill skill);
         public void DeleteSkill(Guid skillId);
+        public IEnumerable<Skill> GetAll();
     }
 }

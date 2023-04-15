@@ -20,5 +20,15 @@ namespace JobCandidates.Persistence.Repositories.Implementation
         {
             return GetSet().FirstOrDefault(x => x.Name == name);
         }
+
+        public IEnumerable<Skill> GetAll()
+        {
+            return GetSet().ToList();
+        }
+
+        public IEnumerable<Skill> GetByIds(IEnumerable<Guid> skillIds)
+        {
+            return GetSet().Where(s => skillIds.Contains(s.Id));
+        }
     }
 }

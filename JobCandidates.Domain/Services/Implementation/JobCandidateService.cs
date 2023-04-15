@@ -16,16 +16,20 @@ namespace JobCandidates.Domain.Services.Implementation
     {
         private readonly IJobCandidateReadRepository _jobCandidateReadRepository;
         private readonly IJobCandidateWriteRepository _jobCandidateWriteRepository;
-        public JobCandidateService(IJobCandidateReadRepository jobCandidateReadRepository, IJobCandidateWriteRepository jobCandidateWriteRepository)
+        private readonly ISkillReadRepository _skillReadRepository;
+        public JobCandidateService(IJobCandidateReadRepository jobCandidateReadRepository, IJobCandidateWriteRepository jobCandidateWriteRepository, ISkillReadRepository skillReadRepository)
         {
             _jobCandidateReadRepository = jobCandidateReadRepository;
             _jobCandidateWriteRepository = jobCandidateWriteRepository;
+            _skillReadRepository = skillReadRepository;
         }
 
-        public JobCandidate AddNewJobCandidate(JobCandidate jobCandidate)
+        public JobCandidate AddNewJobCandidate(JobCandidate jobCandidate, IEnumerable<Guid> skillIds)
         {
             if (_jobCandidateReadRepository.FindJobCandidateByEmail(jobCandidate.Email) != null)
                 throw new AlreadyExistsException("Job candidate with given email is already registered");
+            IEnumerable<Skill> skills = _skillReadRepository.GetByIds(skillIds);
+            jobCandidate.Skills = skills.ToList();
             return _jobCandidateWriteRepository.Add(jobCandidate);
         }
 
@@ -38,17 +42,33 @@ namespace JobCandidates.Domain.Services.Implementation
 
         public JobCandidate AddSkillToJobCandidate(Guid jobCandidateId, Guid skillId)
         {
-            throw new NotImplementedException();
+            var candidate = _jobCandidateReadRepository.GetWithSkills(jobCandidateId);
+            var skill = _skillReadRepository.GetById(skillId);
+            if (candidate == null) throw new NotFoundException("Job candidate not found");
+            if (skill == null) throw new NotFoundException("Skill not found");
+            if (candidate.Skills.Contains(skill))
+                throw new AlreadyExistsException("Job candidate already has that skill");
+            candidate.Skills.Add(skill);
+            _jobCandidateWriteRepository.Update(candidate);
+            return candidate;
         }
 
         public void RemoveSkillToJobCandidate(Guid jobCandidateId, Guid skillId)
         {
-            throw new NotImplementedException();
+            var candidate = _jobCandidateReadRepository.GetWithSkills(jobCandidateId);
+            var skill = _skillReadRepository.GetById(skillId);
+            if (candidate == null) throw new NotFoundException("Job candidate not found");
+            if (skill == null) throw new NotFoundException("Skill not found");
+            if (!candidate.Skills.Contains(skill))
+                throw new NotFoundException("Job candidate doesnt not have that skill");
+            candidate.Skills.Remove(skill);
+            _jobCandidateWriteRepository.Update(candidate);
         }
 
-        public IEnumerable<JobCandidate> SearchCandidate(string fullName, IEnumerable<Guid> skillIds)
+        public IEnumerable<JobCandidate> SearchCandidates(string fullName, IEnumerable<Guid> skillIds)
         {
-            throw new NotImplementedException();
+            var skills = _skillReadRepository.GetByIds(skillIds);
+            return _jobCandidateReadRepository.FindByNameAndSkills(fullName, skills).ToList();
         }
     }
 }

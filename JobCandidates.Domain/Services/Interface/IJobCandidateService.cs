@@ -9,10 +9,10 @@ namespace JobCandidates.Domain.Services.Interface
 {
     public interface IJobCandidateService
     {
-        public JobCandidate AddNewJobCandidate(JobCandidate jobCandidate);
+        public JobCandidate AddNewJobCandidate(JobCandidate jobCandidate, IEnumerable<Guid> skillIds);
         public void RemoveJobCandidate(Guid jobCandidateId);
         public JobCandidate AddSkillToJobCandidate(Guid jobCandidateId, Guid skillId);
         public void RemoveSkillToJobCandidate(Guid jobCandidateId, Guid skillId);
-        public IEnumerable<JobCandidate> SearchCandidate(string fullName, IEnumerable<Guid> skillIds);
+        public IEnumerable<JobCandidate> SearchCandidates(string fullName, IEnumerable<Guid> skillIds);
     }
 }

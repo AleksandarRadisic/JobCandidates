@@ -8,7 +8,9 @@ namespace JobCandidates.API.AutoMapperProfiles
     {
         public JobCandidateProfile()
         {
-            CreateMap<NewJobCandidateDto, JobCandidate>();
+            CreateMap<NewJobCandidateDto, JobCandidate>()
+                .ForMember(dst => dst.Skills, opts => opts.Ignore());
+            CreateMap<JobCandidate, JobCandidateDto>();
         }
     }
 }

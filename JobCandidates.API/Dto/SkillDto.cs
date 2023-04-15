@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
 
 namespace JobCandidates.API.Dto
 {
     public class SkillDto
     {
-        [Required(ErrorMessage = "Skill name is required")]
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

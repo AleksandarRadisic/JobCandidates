@@ -8,7 +8,8 @@ namespace JobCandidates.API.AutoMapperProfiles
     {
         public SkillProfile()
         {
-            CreateMap<SkillDto, Skill>();
+            CreateMap<NewSkillDto, Skill>();
+            CreateMap<Skill, SkillDto>();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace JobCandidates.UnitTests.ControllerTests
                 FullName = "Petar Kojic",
                 PhoneNumber = "064777555",
             };
-            _serviceMock.Setup(s => s.AddNewJobCandidate(toService)).
+            _serviceMock.Setup(s => s.AddNewJobCandidate(toService, new List<Guid>())).
                 Returns(It.IsAny<JobCandidate>());
             _mapperMock.Setup(m => m.Map<JobCandidate>(dto)).Returns(toService);
 
@@ -57,7 +57,8 @@ namespace JobCandidates.UnitTests.ControllerTests
                 DateOfBirth = new DateTime(1980, 2, 10),
                 Email = "kojicpetar@gmail.com",
                 FullName = "Petar Kojic",
-                PhoneNumber = "064777555"
+                PhoneNumber = "064777555",
+                Skills = new List<Guid>()
             };
             JobCandidate toService = new JobCandidate
             {
@@ -66,7 +67,7 @@ namespace JobCandidates.UnitTests.ControllerTests
                 FullName = "Petar Kojic",
                 PhoneNumber = "064777555",
             };
-            _serviceMock.Setup(s => s.AddNewJobCandidate(toService)).Throws(new AlreadyExistsException(""));
+            _serviceMock.Setup(s => s.AddNewJobCandidate(toService, dto.Skills)).Throws(new AlreadyExistsException(""));
             _mapperMock.Setup(m => m.Map<JobCandidate>(dto)).Returns(toService);
 
             JobCandidatesController controller = new JobCandidatesController(_serviceMock.Object, _mapperMock.Object);
@@ -83,7 +84,8 @@ namespace JobCandidates.UnitTests.ControllerTests
                 DateOfBirth = new DateTime(1980, 2, 10),
                 Email = "kojicpetar@gmail.com",
                 FullName = "Petar Kojic",
-                PhoneNumber = "064777555"
+                PhoneNumber = "064777555",
+                Skills = new List<Guid>()
             };
             JobCandidate toService = new JobCandidate
             {
@@ -92,7 +94,7 @@ namespace JobCandidates.UnitTests.ControllerTests
                 FullName = "Petar Kojic",
                 PhoneNumber = "064777555",
             };
-            _serviceMock.Setup(s => s.AddNewJobCandidate(toService)).Throws(new Exception());
+            _serviceMock.Setup(s => s.AddNewJobCandidate(toService, dto.Skills)).Throws(new Exception());
             _mapperMock.Setup(m => m.Map<JobCandidate>(dto)).Returns(toService);
 
             JobCandidatesController controller = new JobCandidatesController(_serviceMock.Object, _mapperMock.Object);
@@ -105,13 +107,13 @@ namespace JobCandidates.UnitTests.ControllerTests
         [Fact]
         public void Delete_candidate_should_return_ok()
         {
-            DeleteEntityIdDto dto = new DeleteEntityIdDto
+            EntityIdDto dto = new EntityIdDto
             {
                 Id = Guid.NewGuid(),
             };
 
             JobCandidatesController controller = new JobCandidatesController(_serviceMock.Object, _mapperMock.Object);
-            var result = controller.DeleteJobCandidate(dto);
+            var result = controller.DeleteJobCandidate(dto.Id.Value);
 
             result.GetType().ShouldBe(typeof(OkObjectResult));
         }
@@ -119,14 +121,14 @@ namespace JobCandidates.UnitTests.ControllerTests
         [Fact]
         public void Delete_candidate_should_return_not_found()
         {
-            DeleteEntityIdDto dto = new DeleteEntityIdDto
+            EntityIdDto dto = new EntityIdDto
             {
                 Id = Guid.NewGuid(),
             };
-            _serviceMock.Setup(s => s.RemoveJobCandidate(dto.Id)).Throws(new NotFoundException(""));
+            _serviceMock.Setup(s => s.RemoveJobCandidate(dto.Id.Value)).Throws(new NotFoundException(""));
 
             JobCandidatesController controller = new JobCandidatesController(_serviceMock.Object, _mapperMock.Object);
-            var result = controller.DeleteJobCandidate(dto);
+            var result = controller.DeleteJobCandidate(dto.Id.Value);
 
             result.GetType().ShouldBe(typeof(NotFoundObjectResult));
         }

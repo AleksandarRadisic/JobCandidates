@@ -17,6 +17,7 @@ namespace JobCandidates.UnitTests.ServiceTests
     {
         private readonly Mock<IJobCandidateReadRepository> _readRepoMock = new();
         private readonly Mock<IJobCandidateWriteRepository> _writeRepoMock = new();
+        private readonly Mock<ISkillReadRepository> _skillReadRepoMock = new();
         [Fact]
         public void New_candidate_should_return_new_candidate()
         {
@@ -42,8 +43,8 @@ namespace JobCandidates.UnitTests.ServiceTests
                 Setup(w => w.Add(newJobCandidate)).
                 Returns(savedCandidate);
 
-            var fromRepo = new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object).
-                AddNewJobCandidate(newJobCandidate);
+            var fromRepo = new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object, _skillReadRepoMock.Object).
+                AddNewJobCandidate(newJobCandidate, new List<Guid>());
 
             fromRepo.Id.ShouldNotBe(Guid.Empty);
             _readRepoMock.
@@ -71,8 +72,8 @@ namespace JobCandidates.UnitTests.ServiceTests
             };
             _readRepoMock.Setup(r => r.FindJobCandidateByEmail(newJobCandidate.Email)).Returns(fromRepoCandidate);
             var service =
-                new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object);
-            Assert.Throws<AlreadyExistsException>(() => service.AddNewJobCandidate(newJobCandidate));
+                new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object, _skillReadRepoMock.Object);
+            Assert.Throws<AlreadyExistsException>(() => service.AddNewJobCandidate(newJobCandidate, new List<Guid>()));
             _readRepoMock.
                 Verify(r => r.FindJobCandidateByEmail(newJobCandidate.Email), Times.Once());
             _writeRepoMock.
@@ -93,7 +94,7 @@ namespace JobCandidates.UnitTests.ServiceTests
             };
             _readRepoMock.Setup(r => r.GetById(toBeDeleted.Id)).Returns(toBeDeleted);
 
-            new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object).RemoveJobCandidate(toBeDeleted.Id);
+            new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object, _skillReadRepoMock.Object).RemoveJobCandidate(toBeDeleted.Id);
 
             _readRepoMock.Verify(r => r.GetById(toBeDeleted.Id), Times.Once());
             _writeRepoMock.Verify(w => w.Delete(toBeDeleted), Times.Once());
@@ -105,7 +106,7 @@ namespace JobCandidates.UnitTests.ServiceTests
             Guid guid = Guid.NewGuid();
             _readRepoMock.Setup(r => r.GetById(guid)).Returns((JobCandidate)null);
             
-            Assert.Throws<NotFoundException>(() => new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object).RemoveJobCandidate(guid));
+            Assert.Throws<NotFoundException>(() => new JobCandidateService(_readRepoMock.Object, _writeRepoMock.Object, _skillReadRepoMock.Object).RemoveJobCandidate(guid));
             _readRepoMock.Verify(r => r.GetById(guid), Times.Once());
             _writeRepoMock.Verify(w => w.Delete(It.IsAny<JobCandidate>()), Times.Never());
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using JobCandidates.API.Dto;
 using JobCandidates.Domain.Exceptions;
@@ -23,8 +24,14 @@ namespace JobCandidates.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPut]
-        public IActionResult AddSkill(SkillDto dto)
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_mapper.Map<IEnumerable<SkillDto>>(_skillService.GetAll()));
+        }
+
+        [HttpPost]
+        public IActionResult AddSkill(NewSkillDto dto)
         {
             try
             {
@@ -41,12 +48,12 @@ namespace JobCandidates.API.Controllers
             return Ok("Skill added");
         }
 
-        [HttpDelete]
-        public IActionResult DeleteSkill(DeleteEntityIdDto dto)
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteSkill(Guid id)
         {
             try
             {
-                _skillService.DeleteSkill(dto.Id.Value);
+                _skillService.DeleteSkill(id);
             }
             catch (Exception ex)
             {

@@ -4,7 +4,7 @@ using JobCandidates.API.ValidationAttributes;
 
 namespace JobCandidates.API.Dto
 {
-    public class DeleteEntityIdDto
+    public class EntityIdDto
     {
         [Required(ErrorMessage = "Id is required")]
         [Guid(ErrorMessage = "Invalid id")]

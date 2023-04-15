@@ -23,7 +23,7 @@ namespace JobCandidates.UnitTests.ControllerTests
         [Fact]
         public void Add_new_skill_should_return_ok()
         {
-            var dto = new SkillDto
+            var dto = new NewSkillDto
             {
                 Name = "New skill"
             };
@@ -47,7 +47,7 @@ namespace JobCandidates.UnitTests.ControllerTests
         [Fact]
         public void Add_new_skill_should_return_bad_request()
         {
-            var dto = new SkillDto
+            var dto = new NewSkillDto
             {
                 Name = "Existing skill"
             };
@@ -67,12 +67,12 @@ namespace JobCandidates.UnitTests.ControllerTests
         [Fact]
         public void Delete_skill_should_return_ok()
         {
-            var dto = new DeleteEntityIdDto
+            var dto = new EntityIdDto
             {
                 Id = Guid.NewGuid()
             };
 
-            var result = new SkillsController(_serviceMock.Object, _mapperMock.Object).DeleteSkill(dto);
+            var result = new SkillsController(_serviceMock.Object, _mapperMock.Object).DeleteSkill(dto.Id.Value);
 
             _serviceMock.Verify(s => s.DeleteSkill(dto.Id.Value), Times.Once());
             result.GetType().ShouldBe(typeof(OkObjectResult));
