@@ -41,6 +41,11 @@ namespace JobCandidates.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FindByName.API", Version = "v1" });
             });
 
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowAnyOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
+
             services.AddDbContextPool<AppDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("connectionString"));
@@ -80,6 +85,8 @@ namespace JobCandidates.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("AllowAnyOrigin");
 
             app.UseEndpoints(endpoints =>
             {

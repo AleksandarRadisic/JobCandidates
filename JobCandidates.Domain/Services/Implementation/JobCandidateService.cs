@@ -28,8 +28,11 @@ namespace JobCandidates.Domain.Services.Implementation
         {
             if (_jobCandidateReadRepository.FindJobCandidateByEmail(jobCandidate.Email) != null)
                 throw new AlreadyExistsException("Job candidate with given email is already registered");
-            IEnumerable<Skill> skills = _skillReadRepository.GetByIds(skillIds);
-            jobCandidate.Skills = skills.ToList();
+            if (skillIds != null)
+            {
+                IEnumerable<Skill> skills = _skillReadRepository.GetByIds(skillIds);
+                jobCandidate.Skills = skills.ToList();
+            }
             return _jobCandidateWriteRepository.Add(jobCandidate);
         }
 
