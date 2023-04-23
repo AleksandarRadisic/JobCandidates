@@ -38,7 +38,7 @@ namespace JobCandidates.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FindByName.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobCandidates.API", Version = "v1" });
             });
 
             services.AddCors(c =>
